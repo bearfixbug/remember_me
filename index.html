@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Remember Login</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+</head>
+<body class="p-5">
+
+    <div style="width: 300px; margin: 0 auto;">
+        <h1>Remember login</h1>
+        <hr>
+        <div>
+            <div class="mb-3">
+              <input type="text" class="form-control" id="txt_username" placeholder="Username">
+            </div>
+            <div class="mb-3">
+              <input type="password" class="form-control" id="txt_password" placeholder="Password">
+            </div>
+            <div class="mb-3 form-check">
+              <input type="checkbox" class="form-check-input" id="txt_remember">
+              <label class="form-check-label" for="exampleCheck1">Remember me</label>
+            </div>
+            <button onclick="login()" class="btn btn-primary">Login</button>
+        </div>
+    </div>
+    
+    <script>
+        const SESSION = localStorage.ss_token ? JSON.parse(localStorage.ss_token) : ''
+        console.log('SESSION', SESSION)
+        if(SESSION.remember && SESSION.exp >= new Date().getTime() ) {
+            //connect your api for send some request to login
+            //simulate
+            window.location.href = 'welcome.html'
+        }
+        else {
+            localStorage.removeItem('ss_token')
+        }
+
+
+        function login() {
+            var username = document.querySelector('#txt_username')
+            var password = document.querySelector('#txt_password')
+            var remember = document.querySelector('#txt_remember')
+            var form = document.querySelector('.form-control')
+
+            form.classList.remove('is-invalid')
+            password.classList.remove('is-invalid')
+            if(username.value.length <= 0) {
+                alert('Please fill username')
+                username.classList.add('is-invalid')
+            }
+            else if(password.value.length <= 0) {
+                alert('Please fill password')
+                password.classList.add('is-invalid')
+            }
+            else {
+                //send request server
+
+                //simulate
+                if(username.value == 'bearbug' && password.value == '1234') {
+                    var session = {
+                        token: '36699656-3ceb-4c3a-bb25-a6e916d72b5c', // simulate token from server
+                        exp: new Date().addMinute(1).getTime(),
+                        expdate: new Date().addMinute(1).addHours(7),
+                        remember: remember.checked
+                    }
+                    localStorage.setItem('ss_token', JSON.stringify(session))
+                    window.location.href = 'welcome.html'
+                }
+                else {
+                    alert('username or password is wrong !')
+                }
+            }
+        }
+
+
+        Date.prototype.addMinute = function(h) {
+            this.setTime(this.getTime() + ((h*60*60*1000)/60));
+            return this;
+        }
+        Date.prototype.addHours = function(h) {
+            this.setTime(this.getTime() + ((h*60*60*1000)));
+            return this;
+        }
+    </script>
+</body>
+</html>
